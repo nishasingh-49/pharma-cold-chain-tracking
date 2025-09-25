@@ -3,7 +3,7 @@ import "dotenv/config";
 import hardhatToolboxMochaEthersPlugin from "@nomicfoundation/hardhat-toolbox-mocha-ethers";
 
 const MANUFACTURER_PRIVATE_KEY = process.env.MANUFACTURER_PRIVATE_KEY || "";
-const GANACHE_RPC_URL = process.env.GANACHE_RPC_URL || "http://127.0.0.1:7545";
+const GANACHE_RPC_URL = process.env.GANACHE_RPC_URL || "HTTP://127.0.0.1:7545";
 
 console.log("Config Debug: MANUFACTURER_PRIVATE_KEY status:", MANUFACTURER_PRIVATE_KEY ? "LOADED" : "MISSING/EMPTY");
 console.log("Config Debug: GANACHE_RPC_URL:", GANACHE_RPC_URL);

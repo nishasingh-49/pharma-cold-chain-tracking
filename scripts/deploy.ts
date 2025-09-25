@@ -3,13 +3,13 @@
 import "dotenv/config";
 import { ethers } from "ethers"; // We will use the direct import
 import * as fs from 'fs';
-import hre from "hardhat"; // Only needed for hre.artifacts
+import hre from "hardhat"; 
 
 async function main() {
   console.log("Deployment script started (Manual Provider)...");
 
   // 1. Manually create a provider connected to your Ganache instance.
-  const rpcUrl = process.env.GANACHE_RPC_URL || "http://127.0.0.1:7545";
+  const rpcUrl = process.env.GANACHE_RPC_URL || "HTTP://127.0.0.1:7545";
   const provider = new ethers.JsonRpcProvider(rpcUrl);
 
   // 2. Get the Private Key for the deployer from .env
