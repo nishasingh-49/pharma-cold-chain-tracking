@@ -1,24 +1,35 @@
 # node/app.py
 import os
+import sys
 from flask import Flask, jsonify
 
-# Create the Flask app instance
-app = Flask(__name__)
+# This line adds the 'src' directory to Python's path
+# so we can import modules from it.
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'src')))
 
-# Get the Node ID from an environment variable, default to "node-unknown"
-NODE_ID = os.environ.get('NODE_ID', 'node-unknown')
+from api.wallet import wallet_bp, crypto_bp
 
-@app.route('/health', methods=['GET'])
-def health_check():
-    """
-    Health check endpoint to confirm the node is running.
-    """
-    response = {
-        'ok': True,
-        'nodeId': NODE_ID
-    }
-    return jsonify(response), 200
+def create_app():
+    """Application factory function"""
+    app = Flask(__name__)
+
+    # Get the Node ID from an environment variable
+    app.config['NODE_ID'] = os.environ.get('NODE_ID', 'node-unknown')
+    
+    @app.route('/health', methods=['GET'])
+    def health_check():
+        return jsonify({
+            'ok': True,
+            'nodeId': app.config['NODE_ID']
+        }), 200
+
+    # Register our blueprints
+    app.register_blueprint(wallet_bp, url_prefix='/wallet')
+    app.register_blueprint(crypto_bp, url_prefix='/crypto')
+    
+    return app
 
 if __name__ == '__main__':
-    # Run the app on port 8000, accessible from any IP address within the Docker network
-    app.run(host='0.0.0.0', port=8000)
+    app = create_app()
+    port = int(os.environ.get('PORT', 8000))
+    app.run(host='0.0.0.0', port=port)
