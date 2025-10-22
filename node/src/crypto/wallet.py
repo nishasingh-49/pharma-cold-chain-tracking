@@ -1,8 +1,7 @@
-# node/src/crypto/wallet.py
 import os
 import binascii
-from Crypto.Hash import keccak 
-from ecdsa import SigningKey, VerifyingKey, SECP256k1
+from Crypto.Hash import keccak
+from ecdsa import SigningKey, VerifyingKey, SECP256k1 
 
 class Wallet:
     """
@@ -11,8 +10,8 @@ class Wallet:
     def __init__(self, private_key_bytes=None):
         if private_key_bytes:
             self.signing_key = SigningKey.from_string(private_key_bytes, curve=SECP256k1)
-        else:
-            self.signing_key = SigningKey.generate(curve=SECP26k1)
+        else: 
+            self.signing_key = SigningKey.generate(curve=SECP256k1)
         
         self.verifying_key = self.signing_key.get_verifying_key()
 
@@ -28,10 +27,8 @@ class Wallet:
     def address(self) -> str:
         pub_key_bytes = self.verifying_key.to_string('uncompressed')
         
-        # --- HASHING LOGIC UPDATED FOR PYCRYPTODOME ---
         keccak_hash = keccak.new(digest_bits=256)
         keccak_hash.update(pub_key_bytes)
-        # --- END OF UPDATE ---
 
         address_bytes = keccak_hash.digest()[-20:]
         return '0x' + address_bytes.hex()
@@ -41,11 +38,9 @@ def hash_data(data: str) -> bytes:
     Hashes the given string data using Keccak-256.
     Returns the hash as bytes.
     """
-    # --- HASHING LOGIC UPDATED FOR PYCRYPTODOME ---
     keccak_hash = keccak.new(digest_bits=256)
     keccak_hash.update(data.encode('utf-8'))
     return keccak_hash.digest()
-    # --- END OF UPDATE ---
 
 def sign_data(wallet: Wallet, data_hash: bytes) -> str:
     signature_bytes = wallet.signing_key.sign_digest(data_hash)
