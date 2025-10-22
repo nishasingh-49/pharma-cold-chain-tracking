@@ -1,4 +1,3 @@
-# node/app.py
 import os
 import sys
 from flask import Flask, jsonify
@@ -6,7 +5,8 @@ from flask import Flask, jsonify
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'src')))
 
 from api.wallet import wallet_bp, crypto_bp
-from api.transaction import tx_bp  # <--- IMPORT THE NEW BLUEPRINT
+from api.transaction import tx_bp 
+from api.gossip import gossip_bp
 
 def create_app():
     """Application factory function"""
@@ -21,10 +21,10 @@ def create_app():
             'nodeId': app.config['NODE_ID']
         }), 200
 
-    # Register our blueprints
     app.register_blueprint(wallet_bp, url_prefix='/wallet')
     app.register_blueprint(crypto_bp, url_prefix='/crypto')
-    app.register_blueprint(tx_bp, url_prefix='/tx') # <--- REGISTER IT
+    app.register_blueprint(tx_bp, url_prefix='/tx') 
+    app.register_blueprint(gossip_bp, url_prefix='/gossip')
 
     return app
 

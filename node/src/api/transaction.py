@@ -1,10 +1,8 @@
-# node/src/api/transaction.py
 from flask import Blueprint, jsonify, request
 from src.core.transaction import Transaction
 from src.core.mempool import Mempool
+from src.p2p.gossip import broadcast_transaction
 
-# Let's create a single, global mempool instance for our node
-# In a more advanced app, this would be managed by a central Node class.
 mempool = Mempool()
 
 tx_bp = Blueprint('transaction', __name__)
@@ -20,7 +18,6 @@ def create_transaction():
     if not data or not all(field in data for field in required_fields):
         return jsonify({'error': 'Missing required transaction fields'}), 400
 
-    # Reconstruct the Transaction object from the request data
     tx = Transaction(
         sender=data['from'],
         to=data['to'],
@@ -31,18 +28,16 @@ def create_transaction():
         signature=data['signature']
     )
     
-    # Before adding, compute its hash to ensure consistency
     tx.hash = tx.compute_hash()
 
-    # Add to our node's mempool
     success, message = mempool.add_transaction(tx)
     
     if success:
-        # TODO: In Phase 3, we will broadcast this transaction to peers.
-        return jsonify({'message': message, 'txHash': tx.hash}), 202 # 202 Accepted
+        broadcast_transaction(tx)
+        return jsonify({'message': message, 'txHash': tx.hash}), 202 
     else:
         print(f"❌ Transaction rejected: {message}")
-        return jsonify({'error': message}), 400 # 400 Bad Request
+        return jsonify({'error': message}), 400 
 
 @tx_bp.route('/mempool', methods=['GET'])
 def get_mempool():
