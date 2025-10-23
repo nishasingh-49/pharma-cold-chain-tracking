@@ -2,6 +2,7 @@
 from flask import Blueprint, jsonify, request
 from src.core.transaction import Transaction
 from src.core.mempool import Mempool
+from src.p2p.gossip import broadcast_transaction
 
 # Let's create a single, global mempool instance for our node
 # In a more advanced app, this would be managed by a central Node class.

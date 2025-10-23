@@ -6,7 +6,9 @@ services:
     container_name: node1
     hostname: node1
     ports:
-      - "8001:8000" # Expose node1's API on host port 8001
+      - "8001:8000" 
+    volumes: 
+      - ../data/node1:/app/data
     environment:
       - NODE_ID=node1
       - PORT=8000
@@ -18,6 +20,8 @@ services:
     hostname: node2
     ports:
       - "8002:8000"
+    volumes: 
+      - ../data/node2:/app/data
     environment:
       - NODE_ID=node2
       - PORT=8000
@@ -29,6 +33,8 @@ services:
     hostname: node3
     ports:
       - "8003:8000"
+    volumes:
+      - ../data/node3:/app/data
     environment:
       - NODE_ID=node3
       - PORT=8000
@@ -40,6 +46,8 @@ services:
     hostname: node4
     ports:
       - "8004:8000"
+    volumes:
+      - ../data/node4:/app/data
     environment:
       - NODE_ID=node4
       - PORT=8000

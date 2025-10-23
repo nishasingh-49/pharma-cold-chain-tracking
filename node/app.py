@@ -3,10 +3,12 @@ import os
 import sys
 from flask import Flask, jsonify
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'src')))
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-from api.wallet import wallet_bp, crypto_bp
-from api.transaction import tx_bp  # <--- IMPORT THE NEW BLUEPRINT
+from src.api.wallet import wallet_bp, crypto_bp
+from src.api.transaction import tx_bp
+from src.api.gossip import gossip_bp
+from src.api.blockchain import blockchain_bp, debug_bp
 
 def create_app():
     """Application factory function"""
@@ -24,7 +26,10 @@ def create_app():
     # Register our blueprints
     app.register_blueprint(wallet_bp, url_prefix='/wallet')
     app.register_blueprint(crypto_bp, url_prefix='/crypto')
-    app.register_blueprint(tx_bp, url_prefix='/tx') # <--- REGISTER IT
+    app.register_blueprint(tx_bp, url_prefix='/tx')
+    app.register_blueprint(gossip_bp, url_prefix='/gossip')
+    app.register_blueprint(blockchain_bp, url_prefix='/chain') 
+    app.register_blueprint(debug_bp, url_prefix='/debug')
 
     return app
 
